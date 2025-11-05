@@ -1,35 +1,40 @@
 package com.asesorias.administrador.entity;
 
 import jakarta.persistence.*;
-import java.util.*;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.asesorias.administrador.dto.ProgramaEducativoDTO;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "usuario")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
-    private Integer idUsuario;
-
-    @Column(name = "nombre")
+    private Integer id;
+    
+    @Column(nullable = false)
     private String nombre;
-
-    @Column(name = "password")
+    
+    @Column(nullable = false)
+    private String apellido;
+    
+    @Column(unique = true, nullable = false)
+    private String email;
+    
+    private String telefono;
+    
+    @Column(nullable = false)
     private String password;
-
-    @Column(name = "rol")
-    private String rol;
-
-    @Column(name = "status")
-    private String status;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "programa_educativo")
-    @JsonManagedReference
-    private List<ProgramaEducativoDTO> programasEducativos;
+    
+    @Column(nullable = false)
+    private boolean activo = true;
+    
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<UsuarioProgramaEducativo> usuarioProgramasEducativos;
 }

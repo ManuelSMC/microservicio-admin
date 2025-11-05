@@ -74,4 +74,11 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/agregarUsuario")
+    public ResponseEntity<Usuario> agregarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        Usuario nuevoUsuario = adminService.agregarUsuario(usuarioDTO);
+        return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
+    }
+
 }

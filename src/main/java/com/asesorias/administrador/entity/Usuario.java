@@ -2,10 +2,6 @@ package com.asesorias.administrador.entity;
 
 import jakarta.persistence.*;
 import java.util.*;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.asesorias.administrador.dto.ProgramaEducativoDTO;
-
 import lombok.Data;
 
 @Entity
@@ -29,7 +25,6 @@ public class Usuario {
     @Column(name = "status")
     private String status;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "programa_educativo")
-    @JsonManagedReference
-    private List<ProgramaEducativoDTO> programasEducativos;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UsuarioProgramaEducativo> usuarioProgramas;
 }

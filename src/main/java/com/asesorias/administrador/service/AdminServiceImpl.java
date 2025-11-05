@@ -53,12 +53,24 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Usuario disable(Integer id) {
         // Deshabilitar un usuario
+        Optional<Usuario> usuarioOpt = adminRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.setStatus(0);  
+            return adminRepository.save(usuario);
+        }
         return null;
     }
 
     @Override
     public Usuario enable(Integer id) {
         // Habilitar un usuario
-        return null;
+        Optional<Usuario> usuarioOpt = adminRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.setStatus(1);  
+            return adminRepository.save(usuario);
+        }
+        return null;  
     }
 }

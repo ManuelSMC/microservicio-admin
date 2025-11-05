@@ -27,7 +27,7 @@ public class Usuario {
     private String rol;
 
     @Column(name = "status")
-    private String status;
+    private int status;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "programa_educativo")
     @JsonManagedReference

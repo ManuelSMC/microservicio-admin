@@ -1,21 +1,18 @@
 package com.asesorias.administrador.service;
 
 import com.asesorias.administrador.entity.Usuario;
-import com.asesorias.administrador.dto.UsuarioDTO;
 import java.util.List;
 
 public interface AdminService {
-    // CREATE
-    Usuario create(Usuario usuario);
-
-    // READ
-    List<Usuario> getAll();
-    Usuario getById(Integer id);
-
-    // UPDATE
-    Usuario update(Integer id, UsuarioDTO adminDTO);
-
-    // DISABLE / ENABLE
-    Usuario disable(Integer id);
-    Usuario enable(Integer id);
+    
+    // Método para visualizar UN administrador por ID
+    Usuario visualizarPorId(Long id);
+    
+    // Método para visualizar TODOS los administradores
+    List<Usuario> visualizarTodos();
+    
+    // Otros métodos que ya tengas...
+    Usuario crear(Usuario usuario);
+    Usuario actualizar(Long id, Usuario usuario);
+    void eliminar(Long id);
 }

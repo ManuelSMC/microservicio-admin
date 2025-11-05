@@ -1,77 +1,39 @@
 package com.asesorias.administrador.controller;
 
-import java.util.List;
-import com.asesorias.administrador.dto.UsuarioDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import com.asesorias.administrador.entity.Usuario;
 import com.asesorias.administrador.service.AdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/administradores")
+@CrossOrigin(origins = "*") // Ajusta según tu configuración de CORS
 public class AdminController {
-
+    
     @Autowired
     private AdminService adminService;
-
-    // CREATE
-    @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody Usuario usuario) {
-        Usuario nuevo = adminService.create(usuario);
-        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
-    }
-
-    // READ - Get all
-    @GetMapping
-    public ResponseEntity<List<Usuario>> getAll() {
-        List<Usuario> lista = adminService.getAll();
-        return new ResponseEntity<>(lista, HttpStatus.OK);
-    }
-
-    // READ - Get by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Usuario> getById(@PathVariable Integer id) {
-        Usuario usuario = adminService.getById(id);
-        if (usuario != null) {
-            return new ResponseEntity<>(usuario, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    
+    // Endpoint para visualizar UN administrador
+    @GetMapping("/visualizar/{id}")
+    public ResponseEntity<Usuario> visualizarAdministrador(@PathVariable Long id) {
+        try {
+            Usuario admin = adminService.visualizarPorId(id);
+            return ResponseEntity.ok(admin);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-
-    // UPDATE
-    @PutMapping("/{id}")
-    public ResponseEntity<Usuario> update(@PathVariable Integer id, @RequestBody UsuarioDTO usuarioDTO) {
-        Usuario actualizado = adminService.update(id, usuarioDTO);
-        if (actualizado != null) {
-            return new ResponseEntity<>(actualizado, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    
+    // Endpoint para visualizar TODOS los administradores
+    @GetMapping("/visualizar")
+    public ResponseEntity<List<Usuario>> visualizarTodos() {
+        List<Usuario> administradores = adminService.visualizarTodos();
+        return ResponseEntity.ok(administradores);
     }
-
-    // DISABLE
-    @PutMapping("/{id}/disable")
-    public ResponseEntity<Usuario> disable(@PathVariable Integer id) {
-        Usuario deshabilitado = adminService.disable(id);
-        if (deshabilitado != null) {
-            return new ResponseEntity<>(deshabilitado, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    // ENABLE
-    @PutMapping("/{id}/enable")
-    public ResponseEntity<Usuario> enable(@PathVariable Integer id) {
-        Usuario habilitado = adminService.enable(id);
-        if (habilitado != null) {
-            return new ResponseEntity<>(habilitado, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+    
+    // Otros endpoints (crear, actualizar, eliminar)...
 }

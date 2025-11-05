@@ -10,6 +10,7 @@ public interface AdminService {
 
     // READ
     List<Usuario> getAll();
+
     Usuario getById(Integer id);
 
     // UPDATE
@@ -17,5 +18,10 @@ public interface AdminService {
 
     // DISABLE / ENABLE
     Usuario disable(Integer id);
+
     Usuario enable(Integer id);
+
+    // AGREGA USUARIO
+    Usuario agregarUsuario(UsuarioDTO usuarioDTO);
+
 }

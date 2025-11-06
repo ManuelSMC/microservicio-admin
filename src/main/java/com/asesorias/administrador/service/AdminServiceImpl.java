@@ -39,21 +39,63 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Usuario update(Integer id, UsuarioDTO adminDTO) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    @Transactional
+    public Usuario update(Integer id, UsuarioDTO usuarioDTO) {
+        Optional<Usuario> usuarioOpt = adminRepository.findById(id);
+        if (!usuarioOpt.isPresent()) {
+            return null;
+        }
+        
+        Usuario usuario = usuarioOpt.get();
+        
+        if (usuarioDTO.getNombre() != null) {
+            usuario.setNombre(usuarioDTO.getNombre());
+        }
+        if (usuarioDTO.getPassword() != null) {
+            usuario.setPassword(usuarioDTO.getPassword());
+        }
+        if (usuarioDTO.getRol() != null) {
+            usuario.setRol(usuarioDTO.getRol());
+        }
+        if (usuarioDTO.getStatus() != null) {
+            usuario.setStatus(usuarioDTO.getStatus());
+        }
+        
+        if (usuarioDTO.getProgramasEducativosIds() != null) {
+            usuario.getProgramasEducativos().clear();
+            
+            for (Integer programaId : usuarioDTO.getProgramasEducativosIds()) {
+                UsuarioProgramaEducativo upe = new UsuarioProgramaEducativo();
+                upe.setUsuario(usuario);
+                upe.setProgramaEducativoId(programaId);
+                usuario.getProgramasEducativos().add(upe);
+            }
+        }
+        
+        return adminRepository.save(usuario);
     }
 
     @Override
+    @Transactional
     public Usuario disable(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'disable'");
+        Optional<Usuario> usuarioOpt = adminRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.setStatus(0);  
+            return adminRepository.save(usuario);
+        }
+        return null;
     }
 
     @Override
+    @Transactional
     public Usuario enable(Integer id) {
-
-        throw new UnsupportedOperationException("Unimplemented method 'enable'");
+        Optional<Usuario> usuarioOpt = adminRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.setStatus(1);  
+            return adminRepository.save(usuario);
+        }
+        return null;  
     }
-
-      
-    
 }

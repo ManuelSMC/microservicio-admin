@@ -21,26 +21,21 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<Usuario> getAll() {
-        // Implementar lógica para obtener todos los usuarios
-        return new ArrayList<>();
+        // Obtener todos los usuarios (administradores)
+        return adminRepository.findAll();
     }
 
     @Override
     public Usuario getById(Integer id) {
-        // Obtener un usuario por ID
-        return null;
+        // Visualizar un usuario por ID
+        return adminRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Administrador no encontrado con ID: " + id));
     }
 
     @Override
     public Usuario create(Usuario usuario) {
-        if (usuario.getNombre() == null || usuario.getPassword() == null || usuario.getRol() == null) {
-            throw new IllegalArgumentException("Faltan datos obligatorios: nombre, password o rol");
-        }
-
-        usuario.setStatus(1);
-
-        Usuario nuevo = adminRepository.save(usuario);
-        return nuevo;
+        // Crear un nuevo usuario
+        return null;
     }
 
     @Override
@@ -50,9 +45,9 @@ public class AdminServiceImpl implements AdminService {
         if (!usuarioOpt.isPresent()) {
             return null;
         }
-
+        
         Usuario usuario = usuarioOpt.get();
-
+        
         if (usuarioDTO.getNombre() != null) {
             usuario.setNombre(usuarioDTO.getNombre());
         }
@@ -65,10 +60,10 @@ public class AdminServiceImpl implements AdminService {
         if (usuarioDTO.getStatus() != null) {
             usuario.setStatus(usuarioDTO.getStatus());
         }
-
+        
         if (usuarioDTO.getProgramasEducativosIds() != null) {
             usuario.getProgramasEducativos().clear();
-
+            
             for (Integer programaId : usuarioDTO.getProgramasEducativosIds()) {
                 UsuarioProgramaEducativo upe = new UsuarioProgramaEducativo();
                 upe.setUsuario(usuario);
@@ -76,7 +71,7 @@ public class AdminServiceImpl implements AdminService {
                 usuario.getProgramasEducativos().add(upe);
             }
         }
-
+        
         return adminRepository.save(usuario);
     }
 
@@ -86,7 +81,7 @@ public class AdminServiceImpl implements AdminService {
         Optional<Usuario> usuarioOpt = adminRepository.findById(id);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
-            usuario.setStatus(0);
+            usuario.setStatus(0);  
             return adminRepository.save(usuario);
         }
         return null;
@@ -98,9 +93,9 @@ public class AdminServiceImpl implements AdminService {
         Optional<Usuario> usuarioOpt = adminRepository.findById(id);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
-            usuario.setStatus(1);
+            usuario.setStatus(1);  
             return adminRepository.save(usuario);
         }
-        return null;
+        return null;  
     }
 }

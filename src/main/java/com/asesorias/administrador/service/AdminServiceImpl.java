@@ -21,14 +21,15 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<Usuario> getAll() {
-        // Implementar lógica para obtener todos los usuarios
-        return new ArrayList<>();
+        // Obtener todos los usuarios (administradores)
+        return adminRepository.findAll();
     }
 
     @Override
     public Usuario getById(Integer id) {
-        // Obtener un usuario por ID
-        return null;
+        // Visualizar un usuario por ID
+        return adminRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Administrador no encontrado con ID: " + id));
     }
 
     @Override
@@ -38,63 +39,21 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
-    public Usuario update(Integer id, UsuarioDTO usuarioDTO) {
-        Optional<Usuario> usuarioOpt = adminRepository.findById(id);
-        if (!usuarioOpt.isPresent()) {
-            return null;
-        }
-        
-        Usuario usuario = usuarioOpt.get();
-        
-        if (usuarioDTO.getNombre() != null) {
-            usuario.setNombre(usuarioDTO.getNombre());
-        }
-        if (usuarioDTO.getPassword() != null) {
-            usuario.setPassword(usuarioDTO.getPassword());
-        }
-        if (usuarioDTO.getRol() != null) {
-            usuario.setRol(usuarioDTO.getRol());
-        }
-        if (usuarioDTO.getStatus() != null) {
-            usuario.setStatus(usuarioDTO.getStatus());
-        }
-        
-        if (usuarioDTO.getProgramasEducativosIds() != null) {
-            usuario.getProgramasEducativos().clear();
-            
-            for (Integer programaId : usuarioDTO.getProgramasEducativosIds()) {
-                UsuarioProgramaEducativo upe = new UsuarioProgramaEducativo();
-                upe.setUsuario(usuario);
-                upe.setProgramaEducativoId(programaId);
-                usuario.getProgramasEducativos().add(upe);
-            }
-        }
-        
-        return adminRepository.save(usuario);
+    public Usuario update(Integer id, UsuarioDTO adminDTO) {
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
-    @Transactional
     public Usuario disable(Integer id) {
-        Optional<Usuario> usuarioOpt = adminRepository.findById(id);
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
-            usuario.setStatus(0);  
-            return adminRepository.save(usuario);
-        }
-        return null;
+        throw new UnsupportedOperationException("Unimplemented method 'disable'");
     }
 
     @Override
-    @Transactional
     public Usuario enable(Integer id) {
-        Optional<Usuario> usuarioOpt = adminRepository.findById(id);
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
-            usuario.setStatus(1);  
-            return adminRepository.save(usuario);
-        }
-        return null;  
+
+        throw new UnsupportedOperationException("Unimplemented method 'enable'");
     }
+
+      
+    
 }

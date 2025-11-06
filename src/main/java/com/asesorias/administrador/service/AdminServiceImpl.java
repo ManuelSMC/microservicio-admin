@@ -1,30 +1,23 @@
 package com.asesorias.administrador.service;
 
-import com.asesorias.administrador.client.ProgramaEducativoClient;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.asesorias.administrador.dto.UsuarioDTO;
-import com.asesorias.administrador.dto.ProgramaEducativoDTO;
 import com.asesorias.administrador.entity.Usuario;
 import com.asesorias.administrador.entity.UsuarioProgramaEducativo;
 import com.asesorias.administrador.repository.AdminRepository;
-
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private AdminRepository adminRepository;
-
-    @Autowired
-    private ProgramaEducativoClient programaEducativoClient;
 
     @Override
     public List<Usuario> getAll() {
@@ -45,14 +38,45 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional
     public Usuario update(Integer id, UsuarioDTO usuarioDTO) {
-        // Actualizar un usuario
-        return null;
+        Optional<Usuario> usuarioOpt = adminRepository.findById(id);
+        if (!usuarioOpt.isPresent()) {
+            return null;
+        }
+        
+        Usuario usuario = usuarioOpt.get();
+        
+        if (usuarioDTO.getNombre() != null) {
+            usuario.setNombre(usuarioDTO.getNombre());
+        }
+        if (usuarioDTO.getPassword() != null) {
+            usuario.setPassword(usuarioDTO.getPassword());
+        }
+        if (usuarioDTO.getRol() != null) {
+            usuario.setRol(usuarioDTO.getRol());
+        }
+        if (usuarioDTO.getStatus() != null) {
+            usuario.setStatus(usuarioDTO.getStatus());
+        }
+        
+        if (usuarioDTO.getProgramasEducativosIds() != null) {
+            usuario.getProgramasEducativos().clear();
+            
+            for (Integer programaId : usuarioDTO.getProgramasEducativosIds()) {
+                UsuarioProgramaEducativo upe = new UsuarioProgramaEducativo();
+                upe.setUsuario(usuario);
+                upe.setProgramaEducativoId(programaId);
+                usuario.getProgramasEducativos().add(upe);
+            }
+        }
+        
+        return adminRepository.save(usuario);
     }
 
     @Override
+    @Transactional
     public Usuario disable(Integer id) {
-        // Deshabilitar un usuario
         Optional<Usuario> usuarioOpt = adminRepository.findById(id);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
@@ -63,8 +87,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional
     public Usuario enable(Integer id) {
-        // Habilitar un usuario
         Optional<Usuario> usuarioOpt = adminRepository.findById(id);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();

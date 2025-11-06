@@ -1,11 +1,18 @@
 package com.asesorias.administrador.entity;
 
-import jakarta.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.asesorias.administrador.dto.ProgramaEducativoDTO;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
@@ -27,9 +34,9 @@ public class Usuario {
     private String rol;
 
     @Column(name = "status")
-    private int status;
+    private Integer status;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "programa_educativo")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<ProgramaEducativoDTO> programasEducativos;
+    private List<UsuarioProgramaEducativo> programasEducativos = new ArrayList<>();
 }

@@ -34,8 +34,14 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Usuario create(Usuario usuario) {
-        // Crear un nuevo usuario
-        return null;
+        if (usuario.getNombre() == null || usuario.getPassword() == null || usuario.getRol() == null) {
+            throw new IllegalArgumentException("Faltan datos obligatorios: nombre, password o rol");
+        }
+
+        usuario.setStatus(1);
+
+        Usuario nuevo = adminRepository.save(usuario);
+        return nuevo;
     }
 
     @Override
